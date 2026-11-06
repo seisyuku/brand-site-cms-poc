@@ -34,7 +34,26 @@ async function includes(path, expected) {
 await scan(dist);
 await includes("index.html", [publishedSlug]);
 await includes("posts/index.html", ["/posts/2/"]);
-await includes("posts/2/index.html", [publishedSlug]);
+const directories = (await readdir(join(dist, "posts"), { withFileTypes: true }))
+  .filter(entry => entry.isDirectory())
+  .map(entry => entry.name);
+const pages = directories.filter(name => /^\d+$/.test(name)).map(Number).sort((a, b) => a - b);
+const articleSlugs = directories.filter(name => !/^\d+$/.test(name)).sort();
+const listedSlugs = [];
+assert(pages.length > 1, "Expected more than one posts page");
+
+for (const [index, page] of pages.entries()) {
+  assert.equal(page, index + 1, "Posts pagination has a gap");
+  const html = await readFile(join(dist, "posts", String(page), "index.html"), "utf8");
+  const slugs = [...html.matchAll(/href="\/posts\/([^/"]+)\/"/g)]
+    .map(match => decodeURIComponent(match[1]))
+    .filter(slug => !/^\d+$/.test(slug));
+  assert(slugs.length > 0, `Posts page ${page} is empty`);
+  if (page < pages.length) assert(html.includes(`href="/posts/${page + 1}/"`));
+  listedSlugs.push(...slugs);
+}
+
+assert.deepEqual(listedSlugs.sort(), articleSlugs, "Posts pagination must list every published route once");
 await includes(`posts/${publishedSlug}/index.html`, [
   "PUBLISH_VALIDATION_A_BODY",
   "Synthetic publishing test image",
@@ -48,5 +67,4 @@ await includes("search/index.html", [publishedSlug]);
 for (const slug of ["siri-ai-ios-test", "controlcode", "sveltia-cms-poc"]) {
   await includes(`posts/${slug}/index.html`, [`/posts/${slug}/`]);
 }
-assert(!(await readdir(join(dist, "posts"))).includes("3"), "Unexpected posts page 3");
 console.log("T07: public routes, pagination, tags, RSS, sitemap, search and all dist files passed.");
