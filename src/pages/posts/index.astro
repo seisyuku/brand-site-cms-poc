@@ -1,10 +1,11 @@
 ---
 import { getCollection } from "astro:content";
+import postFilter from "@utils/postFilter";
 import Posts from "@layouts/Posts.astro";
 import getSortedPosts from "@utils/getSortedPosts";
 import getPagination from "@utils/getPagination";
 
-const posts = await getCollection("blog");
+const posts = await getCollection("blog", postFilter);
 
 const sortedPosts = getSortedPosts(posts);
 

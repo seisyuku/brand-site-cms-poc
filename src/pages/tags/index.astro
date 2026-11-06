@@ -1,5 +1,6 @@
 ---
 import { getCollection } from "astro:content";
+import postFilter from "@utils/postFilter";
 import Header from "@components/Header.astro";
 import Footer from "@components/Footer.astro";
 import Layout from "@layouts/Layout.astro";
@@ -8,7 +9,7 @@ import Tag from "@components/Tag.astro";
 import getUniqueTags from "@utils/getUniqueTags";
 import { SITE } from "@config";
 
-const posts = await getCollection("blog");
+const posts = await getCollection("blog", postFilter);
 
 let tags = getUniqueTags(posts);
 ---

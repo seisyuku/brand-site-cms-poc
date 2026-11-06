@@ -1,5 +1,6 @@
 ---
 import { getCollection } from "astro:content";
+import postFilter from "@utils/postFilter";
 import Layout from "@layouts/Layout.astro";
 import Header from "@components/Header.astro";
 import Footer from "@components/Footer.astro";
@@ -10,7 +11,7 @@ import Socials from "@components/Socials.astro";
 import getSortedPosts from "@utils/getSortedPosts";
 import { SOCIALS } from "@config";
 
-const posts = await getCollection("blog");
+const posts = await getCollection("blog", postFilter);
 
 const sortedPosts = getSortedPosts(posts);
 const featuredPosts = sortedPosts.filter(({ data }) => data.featured);

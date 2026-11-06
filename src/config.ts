@@ -1,14 +1,19 @@
 import type { Site, SocialObjects } from "./types";
 
+const validationPreviewURL =
+  typeof process !== "undefined" &&
+  process.env.CF_PAGES_BRANCH === "codex/sveltia-publish-validation"
+    ? process.env.CF_PAGES_URL
+    : undefined;
+
 export const SITE: Site = {
-  website: "https://astro-paper.pages.dev/", // replace this with your deployed domain
+  website: validationPreviewURL || "https://astro-paper.pages.dev/",
   author: "Sat Naing",
   desc: "A minimal, responsive and SEO-friendly Astro blog theme.",
   title: "AstroPaper",
   ogImage: "astropaper-og.jpg",
   lightAndDarkMode: true,
   postPerPage: 3,
-  scheduledPostMargin: 15 * 60 * 1000, // 15 minutes
 };
 
 export const LOCALE = {

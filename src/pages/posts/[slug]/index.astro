@@ -1,5 +1,6 @@
 ---
 import { type CollectionEntry, getCollection } from "astro:content";
+import postFilter from "@utils/postFilter";
 import Posts from "@layouts/Posts.astro";
 import PostDetails from "@layouts/PostDetails.astro";
 import getSortedPosts from "@utils/getSortedPosts";
@@ -11,7 +12,14 @@ export interface Props {
 }
 
 export async function getStaticPaths() {
-  const posts = await getCollection("blog", ({ data }) => !data.draft);
+  const posts = await getCollection("blog", postFilter);
+
+  const reservedSlug = posts.find(post => /^\d+$/.test(post.slug));
+  if (reservedSlug) {
+    throw new Error(
+      `Post slug "${reservedSlug.slug}" is reserved for pagination (${reservedSlug.id}).`
+    );
+  }
 
   const postResult = posts.map(post => ({
     params: { slug: post.slug },
@@ -28,7 +36,7 @@ export async function getStaticPaths() {
 const { slug } = Astro.params;
 const { post } = Astro.props;
 
-const posts = await getCollection("blog");
+const posts = await getCollection("blog", postFilter);
 
 const sortedPosts = getSortedPosts(posts);
 

@@ -2,7 +2,7 @@
 backend:
   name: github
   repo: seisyuku/brand-site-cms-poc
-  branch: codex/sveltia-cms-poc
+  branch: codex/sveltia-publish-validation
 
 media_folder: public/assets
 public_folder: /assets
@@ -22,16 +22,22 @@ collections:
       editable: false
     fields:
       - { name: author, label: Author, widget: string, required: false }
-      - { name: pubDatetime, label: Publish date, widget: datetime, type: date, default: '{{now}}' }
+      - name: pubDatetime
+        label: Publish date and time
+        widget: datetime
+        output_utc: true
+        default: '{{now}}'
+        hint: A future time keeps the post off the website until a build runs at or after that time.
       - { name: modDatetime, label: Modified date, widget: datetime, type: date, required: false }
       - { name: title, label: Title, widget: string }
       - { name: description, label: Description, widget: text }
       - name: slug
         label: URL slug
         widget: string
-        required: false
-        pattern: ['^[a-z0-9]+(-[a-z0-9]+)*$', 'Use lowercase letters, digits and hyphens.']
-        hint: For new posts, supply a unique slug for the URL and filename. Changing it on an existing post changes its URL.
+        required: true
+        unique: true
+        pattern: ['^(?![0-9]+$)[a-z0-9]+(-[a-z0-9]+)*$', 'Use lowercase letters, digits and hyphens. A slug cannot contain only digits.']
+        hint: Sets the URL and initial filename. Keep this value when editing an existing post to preserve its public URL.
       - { name: draft, label: Draft, widget: boolean, required: false }
       - { name: featured, label: Featured, widget: boolean, required: false }
       - { name: tags, label: Tags, widget: list, required: false }
