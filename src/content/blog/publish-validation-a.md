@@ -10,6 +10,6 @@ tags:
 ogImage: /assets/sveltia-cms-poc.png
 ---
 
-PUBLISH_VALIDATION_A_BODY_V1
+PUBLISH_VALIDATION_A_BODY_V2
 
 ![Synthetic publishing test image](/assets/sveltia-cms-poc.png)
