@@ -9,7 +9,7 @@ featured: false
 
 ## Cloudflare Pages 自動預覽
 
-CLOUDFLARE_T09_SVELTIA_V1
+CLOUDFLARE_T09_SVELTIA_V2
 
 ![T09 合成測試圖](/assets/sveltia-cms-poc.png)
 
