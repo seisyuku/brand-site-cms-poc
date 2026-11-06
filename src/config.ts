@@ -1,13 +1,20 @@
 import type { Site, SocialObjects } from "./types";
 
-const validationPreviewURL =
-  typeof process !== "undefined" &&
-  process.env.CF_PAGES_BRANCH === "codex/sveltia-publish-validation"
-    ? process.env.CF_PAGES_URL
+const validationBranch = "codex/sveltia-publish-validation";
+const env = typeof process !== "undefined" ? process.env : undefined;
+
+const cloudflarePreviewURL =
+  env?.CF_PAGES_BRANCH === validationBranch ? env.CF_PAGES_URL : undefined;
+const netlifyPreviewURL =
+  env?.CONTEXT === "branch-deploy" && env.BRANCH === validationBranch
+    ? env.DEPLOY_PRIME_URL
     : undefined;
 
 export const SITE: Site = {
-  website: validationPreviewURL || "https://astro-paper.pages.dev/",
+  website:
+    cloudflarePreviewURL ||
+    netlifyPreviewURL ||
+    "https://astro-paper.pages.dev/",
   author: "Sat Naing",
   desc: "A minimal, responsive and SEO-friendly Astro blog theme.",
   title: "AstroPaper",

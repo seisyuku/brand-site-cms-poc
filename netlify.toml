@@ -1,0 +1,12 @@
+[build]
+  command = 'test "$CONTEXT" = branch-deploy && test "$BRANCH" = codex/sveltia-publish-validation && npm ci --no-audit --no-fund && npm run build && node scripts/check-publish-validation.mjs'
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20.20.2"
+  ASTRO_TELEMETRY_DISABLED = "1"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Robots-Tag = "noindex"
