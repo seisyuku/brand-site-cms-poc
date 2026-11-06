@@ -11,7 +11,7 @@ ogImage: /assets/sveltia-cms-poc.png
 
 ## Netlify 備援測試
 
-NETLIFY_T09_GOOD_V1
+NETLIFY_T09_GOOD_V2
 
 ![T09 合成測試圖](/assets/sveltia-cms-poc.png)
 
