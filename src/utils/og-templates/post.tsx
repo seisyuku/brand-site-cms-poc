@@ -5,7 +5,7 @@ export default (post: CollectionEntry<"blog">) => {
   return (
     <div
       style={{
-        background: "#fefbfb",
+        background: "#f6e6d5",
         width: "100%",
         height: "100%",
         display: "flex",
@@ -19,7 +19,7 @@ export default (post: CollectionEntry<"blog">) => {
           top: "-1px",
           right: "-1px",
           border: "4px solid #000",
-          background: "#ecebeb",
+          background: "#d2bba7",
           opacity: "0.9",
           borderRadius: "4px",
           display: "flex",
@@ -33,7 +33,7 @@ export default (post: CollectionEntry<"blog">) => {
       <div
         style={{
           border: "4px solid #000",
-          background: "#fefbfb",
+          background: "#fff9f0",
           borderRadius: "4px",
           display: "flex",
           justifyContent: "center",

@@ -1,14 +1,16 @@
 ---
-import { type CollectionEntry } from "astro:content";
+import type { CollectionEntry } from "astro:content";
 import Layout from "@layouts/Layout.astro";
 import Main from "@layouts/Main.astro";
 import Header from "@components/Header.astro";
 import Footer from "@components/Footer.astro";
-import Card from "@components/Card";
+import ArticleGrid from "@components/ArticleGrid.astro";
+import CategoryNav from "@components/CategoryNav.astro";
 import Pagination from "@components/Pagination.astro";
+import { postCategories } from "@utils/postCategories";
 import { SITE } from "@config";
 
-export interface Props {
+interface Props {
   currentPage: number;
   totalPages: number;
   paginatedPosts: CollectionEntry<"blog">[];
@@ -17,33 +19,33 @@ export interface Props {
 }
 
 const { currentPage, totalPages, paginatedPosts, tag, tagName } = Astro.props;
+const category = postCategories.find(item => item.tag === tag);
+const tagPath = `/tags/${encodeURIComponent(tag)}`;
 ---
 
-<Layout title={`Tag: ${tagName} | ${SITE.title}`}>
+<Layout title={`${tagName} | ${SITE.title}`}>
   <Header activeNav="tags" />
   <Main
-    pageTitle={[`Tag:`, `${tagName}`]}
+    archive
+    pageTitle={["", tagName]}
     titleTransition={tag}
-    pageDesc={`All the articles with the tag "${tagName}".`}
+    pageDesc={category?.description ?? `瀏覽標有「${tagName}」的文章。`}
   >
-    <h1 slot="title" transition:name={tag}>{`Tag:${tag}`}</h1>
-    <ul>
-      {
-        paginatedPosts.map(({ data, slug }) => (
-          <Card href={`/posts/${slug}/`} frontmatter={data} />
-        ))
-      }
-    </ul>
+    <CategoryNav active={tag} />
+    {
+      paginatedPosts.length > 0 ? (
+        <ArticleGrid posts={paginatedPosts} />
+      ) : (
+        <p class="muted-text">這個分類目前沒有已發表的文章。</p>
+      )
+    }
+    <div class="inline-links"><a href="/tags/">查看所有分類與標籤 →</a></div>
   </Main>
-
   <Pagination
     {currentPage}
     {totalPages}
-    prevUrl={`/tags/${tag}${
-      currentPage - 1 !== 1 ? "/" + (currentPage - 1) : ""
-    }/`}
-    nextUrl={`/tags/${tag}/${currentPage + 1}/`}
+    prevUrl={`${tagPath}${currentPage > 2 ? "/" + (currentPage - 1) : ""}/`}
+    nextUrl={`${tagPath}/${currentPage + 1}/`}
   />
-
   <Footer noMarginTop={totalPages > 1} />
 </Layout>

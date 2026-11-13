@@ -1,0 +1,56 @@
+---
+import { postCategories } from "@utils/postCategories";
+
+interface Props {
+  active?: string;
+}
+
+const { active } = Astro.props;
+---
+
+<nav aria-label="文章主分類" class="category-nav">
+  <ul>
+    <li>
+      <a href="/posts/" aria-current={active === "all" ? "page" : undefined}
+        >全部</a>
+    </li>
+    {
+      postCategories.map(({ name, tag }) => (
+        <li>
+          <a
+            href={`/tags/${encodeURIComponent(tag)}/`}
+            aria-current={active === tag ? "page" : undefined}
+          >
+            {name}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>
+
+<style>
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-block: var(--space-4);
+  }
+  a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding-inline: var(--space-3);
+    border: 1px solid rgb(var(--color-border));
+    border-radius: var(--radius-control);
+    font-size: 0.875rem;
+  }
+  a:hover {
+    border-color: rgb(var(--color-accent));
+  }
+  a[aria-current="page"] {
+    background: rgb(var(--color-accent));
+    border-color: rgb(var(--color-accent));
+    color: rgb(var(--color-on-accent));
+  }
+</style>

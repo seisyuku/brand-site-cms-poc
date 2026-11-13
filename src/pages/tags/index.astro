@@ -1,25 +1,48 @@
 ---
 import { getCollection } from "astro:content";
-import postFilter from "@utils/postFilter";
+import CategoryNav from "@components/CategoryNav.astro";
 import Header from "@components/Header.astro";
 import Footer from "@components/Footer.astro";
 import Layout from "@layouts/Layout.astro";
 import Main from "@layouts/Main.astro";
 import Tag from "@components/Tag.astro";
 import getUniqueTags from "@utils/getUniqueTags";
+import postFilter from "@utils/postFilter";
+import { postCategories } from "@utils/postCategories";
 import { SITE } from "@config";
 
 const posts = await getCollection("blog", postFilter);
-
-let tags = getUniqueTags(posts);
+const tags = getUniqueTags(posts).filter(
+  ({ tag }) => !postCategories.some(category => category.tag === tag)
+);
 ---
 
-<Layout title={`Tags | ${SITE.title}`}>
+<Layout title={`文章分類 | ${SITE.title}`}>
   <Header activeNav="tags" />
-  <Main pageTitle="Tags" pageDesc="All the tags used in posts.">
-    <ul>
-      {tags.map(({ tag }) => <Tag {tag} size="lg" />)}
-    </ul>
+  <Main pageTitle="文章分類" pageDesc="從四個主題探索 AI 產業的變化。">
+    <CategoryNav />
+    <dl class="mt-6">
+      {
+        postCategories.map(({ name, description }) => (
+          <div class="border-b border-skin-line py-3">
+            <dt class="font-semibold">{name}</dt>
+            <dd class="muted-text">{description}</dd>
+          </div>
+        ))
+      }
+    </dl>
+    {
+      tags.length > 0 && (
+        <div class="mt-6">
+          <h2 class="text-xl">其他標籤</h2>
+          <ul>
+            {tags.map(({ tag, tagName }) => (
+              <Tag {tag} {tagName} size="lg" />
+            ))}
+          </ul>
+        </div>
+      )
+    }
   </Main>
   <Footer />
 </Layout>

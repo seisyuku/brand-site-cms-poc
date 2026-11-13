@@ -22,9 +22,9 @@ const searchList = sortedPosts.map(({ data, slug }) => ({
 }));
 ---
 
-<Layout title={`Search | ${SITE.title}`}>
+<Layout title={`搜尋 | ${SITE.title}`}>
   <Header activeNav="search" />
-  <Main pageTitle="Search" pageDesc="Search any article ...">
+  <Main pageTitle="搜尋" pageDesc="依標題或摘要搜尋文章。">
     <SearchBar client:load searchList={searchList} />
   </Main>
   <Footer />

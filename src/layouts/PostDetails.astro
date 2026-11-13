@@ -47,67 +47,71 @@ const layoutProps = {
 ---
 
 <Layout {...layoutProps}>
-  <Header />
+  <Header activeNav="posts" />
 
-  <!-- <div class="progress-container fixed top-0 z-10 h-1 w-full bg-skin-fill">
-    <div class="progress-bar h-1 w-0 bg-skin-accent" id="myBar"></div>
-  </div> -->
+  <main id="main-content" class="reading-surface flex-1">
+    <div class="reading-container post-content">
+      <div class="inline-links"><a href="/posts/">← 文章與觀點</a></div>
+      <h1 transition:name={slugifyStr(title)} class="post-title">{title}</h1>
+      <div class="muted-text post-byline">
+        <span>{author}</span>
+        <Datetime
+          pubDatetime={pubDatetime}
+          modDatetime={modDatetime}
+          size="lg"
+        />
+      </div>
+      <article id="article" role="article" class="prose mt-8">
+        <Content />
+      </article>
 
-  <div class="mx-auto flex w-full max-w-3xl justify-start px-2">
-    <button
-      class="focus-outline mb-2 mt-8 flex hover:opacity-75"
-      onclick="(() => (history.length === 1) ? window.location = '/' : history.back())()"
-    >
-      <svg xmlns="http://www.w3.org/2000/svg"
-        ><path
-          d="M13.293 6.293 7.586 12l5.707 5.707 1.414-1.414L10.414 12l4.293-4.293z"
-        ></path>
-      </svg><span>Go back</span>
-    </button>
-  </div>
-  <main id="main-content">
-    <h1 transition:name={slugifyStr(title)} class="post-title">{title}</h1>
-    <Datetime
-      pubDatetime={pubDatetime}
-      modDatetime={modDatetime}
-      size="lg"
-      className="my-2"
-    />
-    <article id="article" role="article" class="prose mx-auto mt-8 max-w-3xl">
-      <Content />
-    </article>
+      <ul class="my-8">
+        {tags.map(tag => <Tag tag={slugifyStr(tag)} tagName={tag} />)}
+      </ul>
 
-    <ul class="my-8">
-      {tags.map(tag => <Tag tag={slugifyStr(tag)} />)}
-    </ul>
-
-    <div
-      class="flex flex-col-reverse items-center justify-between gap-6 sm:flex-row-reverse sm:items-end sm:gap-4"
-    >
-      <button
-        id="back-to-top"
-        class="focus-outline whitespace-nowrap py-1 hover:opacity-75"
+      <div class="inline-links post-related">
+        <a href="/about/">了解作者 →</a>
+        <a href="/methods/">看工作方法 →</a>
+        <a href="/services/">看相關服務 →</a>
+      </div>
+      <div
+        class="flex flex-col-reverse items-center justify-between gap-6 sm:flex-row-reverse sm:items-end sm:gap-4"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" class="rotate-90">
-          <path
-            d="M13.293 6.293 7.586 12l5.707 5.707 1.414-1.414L10.414 12l4.293-4.293z"
-          ></path>
-        </svg>
-        <span>Back to Top</span>
-      </button>
+        <button
+          id="back-to-top"
+          class="focus-outline whitespace-nowrap py-1 hover:opacity-75"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="rotate-90">
+            <path
+              d="M13.293 6.293 7.586 12l5.707 5.707 1.414-1.414L10.414 12l4.293-4.293z"
+            ></path>
+          </svg>
+          <span>回到頁首</span>
+        </button>
 
-      <ShareLinks />
+        <ShareLinks />
+      </div>
     </div>
   </main>
   <Footer />
 </Layout>
 
 <style>
-  main {
-    @apply mx-auto w-full max-w-3xl px-4 pb-12;
+  .post-content {
+    padding-block: var(--space-4) var(--section-space);
   }
   .post-title {
-    @apply text-2xl font-semibold text-skin-accent;
+    font-size: var(--type-page-title);
+  }
+  .post-byline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--space-3);
+    margin-top: var(--space-2);
+  }
+  .post-related {
+    border-top: 1px solid rgb(var(--color-border));
+    margin-bottom: var(--space-4);
   }
 </style>
 
@@ -118,7 +122,7 @@ const layoutProps = {
     // Create the main container div
     const progressContainer = document.createElement("div");
     progressContainer.className =
-      "progress-container fixed top-0 z-10 h-1 w-full bg-skin-fill";
+      "progress-container fixed top-[var(--site-header-height,0px)] z-10 h-1 w-full bg-skin-fill";
 
     // Create the progress bar div
     const progressBar = document.createElement("div");
@@ -154,7 +158,9 @@ const layoutProps = {
   /** Attaches links to headings in the document,
    *  allowing sharing of sections easily */
   function addHeadingLinks() {
-    let headings = Array.from(document.querySelectorAll("h2, h3, h4, h5, h6"));
+    let headings = Array.from(
+      document.querySelectorAll("#article :is(h2, h3, h4, h5, h6)[id]")
+    );
     for (let heading of headings) {
       heading.classList.add("group");
       let link = document.createElement("a");
@@ -170,7 +176,7 @@ const layoutProps = {
   /** Attaches copy buttons to code blocks in the document,
    * allowing users to copy code easily. */
   function attachCopyButtons() {
-    let copyButtonLabel = "Copy";
+    let copyButtonLabel = "複製";
     let codeBlocks = Array.from(document.querySelectorAll("pre"));
 
     for (let codeBlock of codeBlocks) {
@@ -200,7 +206,7 @@ const layoutProps = {
       await navigator.clipboard.writeText(text ?? "");
 
       // visual feedback that task is completed
-      button.innerText = "Copied";
+      button.innerText = "已複製";
 
       setTimeout(() => {
         button.innerText = copyButtonLabel;

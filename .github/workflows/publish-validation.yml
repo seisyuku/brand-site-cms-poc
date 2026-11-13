@@ -3,7 +3,7 @@ name: Publish validation build
 on:
   push:
     branches:
-      - codex/sveltia-publish-validation
+      - codex/Works_Web-setup
 
 permissions:
   contents: read
@@ -20,7 +20,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
-          node-version: '20.20.2'
+          node-version-file: '.nvmrc'
           package-manager-cache: false
       - run: npm ci --no-audit --no-fund
       - run: npm run build

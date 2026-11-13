@@ -1,164 +1,326 @@
 ---
 import { getCollection } from "astro:content";
-import postFilter from "@utils/postFilter";
-import Layout from "@layouts/Layout.astro";
-import Header from "@components/Header.astro";
-import Footer from "@components/Footer.astro";
-import LinkButton from "@components/LinkButton.astro";
-import Hr from "@components/Hr.astro";
 import Card from "@components/Card";
-import Socials from "@components/Socials.astro";
+import CategoryNav from "@components/CategoryNav.astro";
+import Footer from "@components/Footer.astro";
+import Header from "@components/Header.astro";
+import Layout from "@layouts/Layout.astro";
 import getSortedPosts from "@utils/getSortedPosts";
-import { SOCIALS } from "@config";
+import postFilter from "@utils/postFilter";
 
-const posts = await getCollection("blog", postFilter);
-
-const sortedPosts = getSortedPosts(posts);
-const featuredPosts = sortedPosts.filter(({ data }) => data.featured);
-const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
-
-const socialCount = SOCIALS.filter(social => social.active).length;
+const posts = getSortedPosts(await getCollection("blog", postFilter));
+const featured = posts.filter(({ data }) => data.featured).slice(0, 2);
+const featuredSlugs = new Set(featured.map(({ slug }) => slug));
+const recent = posts.filter(({ slug }) => !featuredSlugs.has(slug)).slice(0, 4);
 ---
 
 <Layout>
   <Header />
   <main id="main-content">
-    <section id="hero">
-      <h1>Mingalaba</h1>
-      <a
-        target="_blank"
-        href="/rss.xml"
-        class="rss-link"
-        aria-label="rss feed"
-        title="RSS Feed"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" class="rss-icon"
-          ><path
-            d="M19 20.001C19 11.729 12.271 5 4 5v2c7.168 0 13 5.832 13 13.001h2z"
-          ></path><path
-            d="M12 20.001h2C14 14.486 9.514 10 4 10v2c4.411 0 8 3.589 8 8.001z"
-          ></path><circle cx="6" cy="18" r="2"></circle>
-        </svg>
-        <span class="sr-only">RSS Feed</span>
-      </a>
-
-      <p>
-        AstroPaper is a minimal, responsive, accessible and SEO-friendly Astro
-        blog theme. This theme follows best practices and provides accessibility
-        out of the box. Light and dark mode are supported by default. Moreover,
-        additional color schemes can also be configured.
-      </p>
-      <p>
-        Read the blog posts or check
-        <LinkButton
-          className="underline decoration-dashed underline-offset-4 hover:text-skin-accent"
-          href="https://github.com/satnaing/astro-paper#readme"
-        >
-          README
-        </LinkButton> for more info.
-      </p>
-      {
-        // only display if at least one social link is enabled
-        socialCount > 0 && (
-          <div class="social-wrapper">
-            <div class="social-links">Social Links:</div>
-            <Socials />
-          </div>
-        )
-      }
+    <section
+      class="site-container home-hero"
+      id="hero"
+      aria-labelledby="hero-title"
+    >
+      <div class="hero-copy">
+        <p class="eyebrow">米的商業現場 · 給台灣經營者與實務工作者</p>
+        <h1 id="hero-title">從商業趨勢<br />到企業營運</h1>
+        <p class="hero-deck">分享我的觀察與判斷，運用資料與 AI 改變你的未來</p>
+        <p class="home-copy">
+          我是米。我追蹤 AI
+          產業的變化，從公開資料出發，整理哪些值得留意，以及它可能怎麼影響你的團隊。
+        </p>
+        <div class="hero-actions">
+          <a class="action-link" href="/posts/"
+            >閱讀商業觀察 <span aria-hidden="true">↗</span></a
+          >
+          <a class="secondary-action" href="/about/"
+            >認識米 <span aria-hidden="true">→</span></a
+          >
+        </div>
+      </div>
+      <aside class="field-notes" aria-label="我的觀察方法">
+        <span class="notes-kicker">LORDMI WORKS / 現場筆記</span>
+        <div class="notes-symbol" aria-hidden="true"><span>米</span></div>
+        <ol>
+          <li>
+            <span>01</span><div>
+              <strong>觀察變化</strong><p>從事件、資料與現場出發</p>
+            </div>
+          </li>
+          <li>
+            <span>02</span><div>
+              <strong>形成判斷</strong><p>釐清脈絡，也看見限制</p>
+            </div>
+          </li>
+          <li>
+            <span>03</span><div>
+              <strong>走向行動</strong><p>找到值得先驗證的一步</p>
+            </div>
+          </li>
+        </ol>
+      </aside>
     </section>
 
-    <Hr />
+    <section class="site-container start-paths" aria-labelledby="start-title">
+      <p class="eyebrow">從這裡開始</p>
+      <h2 id="start-title">你現在想釐清什麼？</h2>
+      <div class="path-grid">
+        <a href="/posts/"
+          ><span class="path-number" aria-hidden="true">01 ↗</span><h3>
+            看懂產業變化
+          </h3><p>
+            從 AI 商業事件、市場格局與技術變化，找到值得留意的訊號。
+          </p><span class="path-link">閱讀文章 →</span></a
+        >
+        <a href="/methods/"
+          ><span class="path-number" aria-hidden="true">02 ↗</span><h3>
+            理解判斷的方法
+          </h3><p>
+            看資料如何整理、假設如何拆解，以及問題如何一步步釐清。
+          </p><span class="path-link">看方法與案例 →</span></a
+        >
+        <a href="/services/"
+          ><span class="path-number" aria-hidden="true">03 ↗</span><h3>
+            討論團隊的下一步
+          </h3><p>從市場競爭或 AI 營運問題出發，了解適合的合作方式。</p><span
+            class="path-link">了解專業服務 →</span
+          ></a
+        >
+      </div>
+    </section>
 
-    {
-      featuredPosts.length > 0 && (
-        <>
-          <section id="featured">
-            <h2>Featured</h2>
-            <ul>
-              {featuredPosts.map(({ data, slug }) => (
-                <Card
-                  href={`/posts/${slug}/`}
-                  frontmatter={data}
-                  secHeading={false}
-                />
-              ))}
-            </ul>
-          </section>
-          {recentPosts.length > 0 && <Hr />}
-        </>
-      )
-    }
-
-    {
-      recentPosts.length > 0 && (
-        <section id="recent-posts">
-          <h2>Recent Posts</h2>
-          <ul>
-            {recentPosts.map(
-              ({ data, slug }, index) =>
-                index < 4 && (
+    <section
+      class="home-band reading-surface"
+      id="writing"
+      aria-labelledby="writing-title"
+    >
+      <div class="site-container">
+        <p class="eyebrow">文章與觀點</p>
+        <h2 id="writing-title">AI 產業發生了什麼商業事件</h2>
+        <p class="home-copy">
+          從事件和來源出發，說明我的判斷，以及經營者下一步可以查什麼。
+        </p>
+        <CategoryNav />
+        {
+          featured.length > 0 && (
+            <div id="featured" class="home-posts">
+              <p class="eyebrow">精選文章</p>
+              <ul>
+                {featured.map(({ data, slug }) => (
                   <Card
                     href={`/posts/${slug}/`}
                     frontmatter={data}
                     secHeading={false}
                   />
-                )
-            )}
-          </ul>
-        </section>
-      )
-    }
+                ))}
+              </ul>
+            </div>
+          )
+        }
+        {
+          recent.length > 0 && (
+            <div id="recent-posts" class="home-posts">
+              <p class="eyebrow">近期觀察</p>
+              <ul>
+                {recent.map(({ data, slug }) => (
+                  <Card
+                    href={`/posts/${slug}/`}
+                    frontmatter={data}
+                    secHeading={false}
+                  />
+                ))}
+              </ul>
+            </div>
+          )
+        }
+        {posts.length === 0 && <p class="muted-text">文章準備中。</p>}
+        <div class="inline-links"><a href="/posts/">所有文章 →</a></div>
+      </div>
+    </section>
 
-    <div class="all-posts-btn-wrapper">
-      <LinkButton href="/posts/">
-        All Posts
-        <svg xmlns="http://www.w3.org/2000/svg"
-          ><path
-            d="m11.293 17.293 1.414 1.414L19.414 12l-6.707-6.707-1.414 1.414L15.586 11H6v2h9.586z"
-          ></path>
-        </svg>
-      </LinkButton>
-    </div>
+    <section class="home-band" id="about" aria-labelledby="about-title">
+      <div class="site-container">
+        <p class="eyebrow">關於我</p>
+        <h2 id="about-title">我是米。</h2>
+        <p class="home-copy">
+          做過管理、科技與媒體，現在主要在觀察未來：哪些只是新聞，哪些真的會改變我們怎麼工作與享受樂趣。
+        </p>
+        <div class="inline-links">
+          <a href="/about/">更多關於我 →</a><a href="/methods/"
+            >看我的工作方法 →</a
+          >
+        </div>
+      </div>
+    </section>
   </main>
-
   <Footer />
 </Layout>
 
 <style>
-  /* ===== Hero Section ===== */
-  #hero {
-    @apply pb-6 pt-8;
+  .home-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(2rem, 6vw, 5rem);
+    padding-block: clamp(2.75rem, 7vw, 5.5rem);
   }
-  #hero h1 {
-    @apply my-4 inline-block text-3xl font-bold sm:my-8 sm:text-5xl;
+  h1 {
+    font-size: clamp(2.25rem, 4.8vw, 3.75rem);
+    text-wrap: balance;
   }
-  #hero .rss-link {
-    @apply mb-6;
+  h2 {
+    font-size: clamp(1.5rem, 3vw, 2rem);
   }
-  #hero .rss-icon {
-    @apply mb-2 h-6 w-6 scale-110 fill-skin-accent sm:mb-3 sm:scale-125;
+  .eyebrow + :is(h1, h2) {
+    margin-top: var(--space-2);
   }
-  #hero p {
-    @apply my-2;
+  .hero-deck {
+    font-size: clamp(1.125rem, 2.5vw, 1.5rem);
+    font-weight: 650;
+    margin-top: var(--space-3);
   }
-  .social-wrapper {
-    @apply mt-4 flex flex-col sm:flex-row sm:items-center;
+  .home-copy {
+    max-width: 44em;
+    margin-top: var(--space-2);
   }
-  .social-links {
-    @apply mb-1 mr-2 whitespace-nowrap sm:mb-0;
+  .home-band {
+    border-top: 1px solid rgb(var(--color-border));
+    padding-block: var(--section-space);
   }
-
-  /* ===== Featured & Recent Posts Sections ===== */
-  #featured,
-  #recent-posts {
-    @apply pb-6 pt-12;
+  .home-posts {
+    margin-top: var(--space-4);
   }
-  #featured h2,
-  #recent-posts h2 {
-    @apply text-2xl font-semibold tracking-wide;
+  .home-posts .eyebrow {
+    margin-bottom: var(--space-2);
   }
-  .all-posts-btn-wrapper {
-    @apply my-8 text-center;
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1.75rem;
+  }
+  .hero-actions a {
+    min-height: 48px;
+    padding: 0.65rem 1.25rem;
+    gap: 1rem;
+  }
+  .secondary-action {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid rgb(var(--color-border));
+    border-radius: var(--radius-control);
+  }
+  .field-notes {
+    background: rgb(var(--color-surface-brand));
+    padding: clamp(1.5rem, 3vw, 2.5rem);
+    border: 1px solid rgb(var(--color-border));
+    border-radius: 1rem;
+    color: rgb(var(--color-brand));
+  }
+  .notes-kicker {
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+  }
+  .notes-symbol {
+    display: grid;
+    place-items: center;
+    width: 7rem;
+    height: 7rem;
+    margin: 1.5rem auto;
+    border: 1px solid rgb(var(--color-accent));
+    border-radius: 50%;
+    box-shadow: 10px 5px 0 rgb(var(--color-surface-frame));
+  }
+  .notes-symbol span {
+    font: 700 3rem var(--font-display);
+  }
+  .field-notes ol {
+    display: grid;
+    gap: 1rem;
+  }
+  .field-notes li {
+    display: flex;
+    gap: 1rem;
+    border-top: 1px solid rgb(var(--color-border));
+    padding-top: 0.75rem;
+  }
+  .field-notes li > span {
+    color: rgb(var(--color-accent));
+    font-size: 0.8125rem;
+    padding-top: 0.2rem;
+  }
+  .field-notes p {
+    font-size: 0.875rem;
+    color: rgb(var(--color-muted));
+  }
+  .start-paths {
+    padding-bottom: var(--section-space);
+  }
+  .path-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+  }
+  .path-grid > a {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1.5rem;
+    border: 1px solid rgb(var(--color-border));
+    border-radius: 0.5rem;
+  }
+  .path-grid > a:hover {
+    border-color: rgb(var(--color-accent));
+  }
+  .path-number {
+    color: rgb(var(--color-accent));
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+  }
+  .path-grid h3 {
+    font-size: 1.25rem;
+  }
+  .path-grid p {
+    color: rgb(var(--color-muted));
+    margin: 0.75rem 0 1.25rem;
+  }
+  .path-link {
+    color: rgb(var(--color-accent));
+    margin-top: auto;
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+  }
+  @media (max-width: 767px) {
+    .home-hero,
+    .path-grid {
+      grid-template-columns: 1fr;
+    }
+    .field-notes {
+      max-width: 100%;
+    }
+    .notes-symbol {
+      width: 5rem;
+      height: 5rem;
+    }
   }
 </style>
+
+<script>
+  const formerSections = new Map([
+    ["#services", "/services/"],
+    ["#methods", "/methods/"],
+    ["#contact", "/contact/"],
+  ]);
+
+  function redirectFormerSection() {
+    if (location.pathname !== "/") return;
+    const destination = formerSections.get(location.hash);
+    if (destination) location.replace(destination + location.search);
+  }
+
+  redirectFormerSection();
+  window.addEventListener("hashchange", redirectFormerSection);
+  document.addEventListener("astro:after-swap", redirectFormerSection);
+</script>

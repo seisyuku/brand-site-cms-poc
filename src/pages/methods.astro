@@ -1,0 +1,67 @@
+---
+import Footer from "@components/Footer.astro";
+import Header from "@components/Header.astro";
+import Layout from "@layouts/Layout.astro";
+import Main from "@layouts/Main.astro";
+import { SITE } from "@config";
+
+const title = "方法與案例";
+const description = "把問題拆成可驗證的判斷。";
+---
+
+<Layout title={`${title} | ${SITE.title}`} {description}>
+  <Header />
+  <Main pageTitle={title} pageDesc={description}>
+    <ol class="method-grid">
+      <li>
+        <strong>界定決策</strong>
+        <p>先說清楚要決定什麼，以及時間和資源限制。</p>
+      </li>
+      <li>
+        <strong>查核資料</strong>
+        <p>區分可查證的事實、推論和待確認事項。</p>
+      </li>
+      <li>
+        <strong>比較選項</strong>
+        <p>以同一組條件衡量成本、風險和驗證方式。</p>
+      </li>
+    </ol>
+    <details class="method-example">
+      <summary>方法示例 · 一家中小企業要不要更換 AI 工具</summary>
+      <p>
+        先以同一批任務比較新舊工具的品質和工時，再把移轉成本、資料權限與合約條件放進決策。先試一個流程，依結果決定是否擴大。
+      </p>
+    </details>
+    <div class="inline-links">
+      <a href="/services/">看相關服務 →</a>
+      <a href="/contact/">聯絡合作 →</a>
+    </div>
+  </Main>
+  <Footer />
+</Layout>
+
+<style>
+  .method-grid {
+    display: grid;
+    gap: var(--space-4) var(--space-6);
+    margin-block: var(--space-4);
+    list-style: decimal;
+    padding-inline-start: 1.5rem;
+  }
+  .method-example {
+    border-block: 1px solid rgb(var(--color-border));
+    padding-block: var(--space-3);
+  }
+  .method-example summary {
+    color: rgb(var(--color-accent));
+    cursor: pointer;
+  }
+  .method-example p {
+    margin-top: var(--space-2);
+  }
+  @media (min-width: 640px) {
+    .method-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+</style>

@@ -1,72 +1,83 @@
 ---
-// Remove current url path and remove trailing slash if exists
-const currentUrlPath = Astro.url.pathname.replace(/\/+$/, "");
+interface Props {
+  wide?: boolean;
+}
 
-// Get url array from path
-// eg: /tags/tailwindcss => ['tags', 'tailwindcss']
-const breadcrumbList = currentUrlPath.split("/").slice(1);
+const { wide = false } = Astro.props;
+const parts = Astro.url.pathname.split("/").filter(Boolean);
+const [section, tagOrPage, tagPage] = parts;
+const labels: Record<string, string> = {
+  posts: "文章與觀點",
+  tags: "文章分類",
+  about: "關於我",
+  search: "搜尋",
+  services: "專業服務",
+  methods: "方法與案例",
+  contact: "聯絡合作",
+};
 
-// if breadcrumb is Home > Posts > 1 <etc>
-// replace Posts with Posts (page number)
-breadcrumbList[0] === "posts" &&
-  breadcrumbList.splice(0, 2, `Posts (page ${breadcrumbList[1] || 1})`);
+const breadcrumbs = [
+  {
+    name: labels[section] ?? decodeURIComponent(section ?? ""),
+    href: `/${section}/`,
+  },
+];
 
-// if breadcrumb is Home > Tags > [tag] > [page] <etc>
-// replace [tag] > [page] with [tag] (page number)
-breadcrumbList[0] === "tags" &&
-  !isNaN(Number(breadcrumbList[2])) &&
-  breadcrumbList.splice(
-    1,
-    3,
-    `${breadcrumbList[1]} ${
-      Number(breadcrumbList[2]) === 1 ? "" : "(page " + breadcrumbList[2] + ")"
-    }`
-  );
+if (section === "posts" && tagOrPage) {
+  breadcrumbs.push({ name: `第 ${tagOrPage} 頁`, href: Astro.url.pathname });
+}
+if (section === "tags" && tagOrPage) {
+  breadcrumbs.push({
+    name: decodeURIComponent(tagOrPage),
+    href: `/tags/${tagOrPage}/`,
+  });
+  if (tagPage && tagPage !== "1") {
+    breadcrumbs.push({ name: `第 ${tagPage} 頁`, href: Astro.url.pathname });
+  }
+}
 ---
 
-<nav class="breadcrumb" aria-label="breadcrumb">
-  <ul>
-    <li>
-      <a href="/">Home</a>
-      <span aria-hidden="true">&raquo;</span>
-    </li>
+<nav
+  class:list={[
+    wide ? "site-container" : "reading-container",
+    "breadcrumb",
+    "muted-text",
+  ]}
+  aria-label="目前位置"
+>
+  <ol>
+    <li><a href="/">首頁</a></li>
     {
-      breadcrumbList.map((breadcrumb, index) =>
-        index + 1 === breadcrumbList.length ? (
-          <li>
-            <span
-              class={`${index > 0 ? "lowercase" : "capitalize"}`}
-              aria-current="page"
-            >
-              {/* make the last part lowercase in Home > Tags > some-tag */}
-              {decodeURIComponent(breadcrumb)}
-            </span>
-          </li>
-        ) : (
-          <li>
-            <a href={`/${breadcrumb}/`}>{breadcrumb}</a>
-            <span aria-hidden="true">&raquo;</span>
-          </li>
-        )
-      )
+      breadcrumbs.map(({ name, href }, index) => (
+        <li>
+          <span aria-hidden="true">›</span>
+          {index === breadcrumbs.length - 1 ? (
+            <span aria-current="page">{name}</span>
+          ) : (
+            <a href={href}>{name}</a>
+          )}
+        </li>
+      ))
     }
-  </ul>
+  </ol>
 </nav>
 
 <style>
   .breadcrumb {
-    @apply mx-auto mb-1 mt-8 w-full max-w-3xl px-4;
+    padding-top: var(--space-6);
+    font-size: 0.875rem;
   }
-  .breadcrumb ul li {
-    @apply inline;
+  ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
   }
-  .breadcrumb ul li a {
-    @apply capitalize opacity-70;
+  li {
+    display: inline-flex;
+    gap: var(--space-2);
   }
-  .breadcrumb ul li span {
-    @apply opacity-70;
-  }
-  .breadcrumb ul li:not(:last-child) a {
-    @apply hover:opacity-100;
+  a {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
   }
 </style>

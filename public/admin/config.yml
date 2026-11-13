@@ -2,7 +2,7 @@
 backend:
   name: github
   repo: seisyuku/brand-site-cms-poc
-  branch: codex/sveltia-publish-validation
+  branch: codex/Works_Web-setup
 
 media_folder: public/assets
 public_folder: /assets

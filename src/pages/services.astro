@@ -1,0 +1,56 @@
+---
+import Footer from "@components/Footer.astro";
+import Header from "@components/Header.astro";
+import Layout from "@layouts/Layout.astro";
+import Main from "@layouts/Main.astro";
+import { SITE } from "@config";
+
+const title = "專業服務";
+const description = "從你正在做的決策談起。";
+---
+
+<Layout title={`${title} | ${SITE.title}`} {description}>
+  <Header />
+  <Main pageTitle={title} pageDesc={description}>
+    <div class="service-grid">
+      <section aria-labelledby="market-service-title">
+        <h2 id="market-service-title">市場與競爭判讀</h2>
+        <p>
+          當競爭對手、平台或商業模式出現變化，整理現有資料、關鍵假設與可比較的選項。
+        </p>
+      </section>
+      <section aria-labelledby="ai-service-title">
+        <h2 id="ai-service-title">AI 與營運評估</h2>
+        <p>
+          當團隊想導入
+          AI，從現有流程、資料和人力限制出發，找出適合先驗證的場景。
+        </p>
+      </section>
+    </div>
+    <div class="inline-links">
+      <a href="/methods/">先看方法與示例 →</a>
+      <a href="/contact/">聯絡合作 →</a>
+    </div>
+  </Main>
+  <Footer />
+</Layout>
+
+<style>
+  .service-grid {
+    display: grid;
+    gap: var(--space-4) var(--space-6);
+    margin-block: var(--space-4);
+  }
+  section {
+    border-top: 1px solid rgb(var(--color-border));
+    padding-top: var(--space-3);
+  }
+  h2 + p {
+    margin-top: var(--space-1);
+  }
+  @media (min-width: 640px) {
+    .service-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>

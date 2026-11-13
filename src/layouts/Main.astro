@@ -12,13 +12,19 @@ interface ArrayTitleProp {
   pageDesc?: string;
 }
 
-export type Props = StringTitleProp | ArrayTitleProp;
+export type Props = (StringTitleProp | ArrayTitleProp) & { archive?: boolean };
 
 const { props } = Astro;
 ---
 
 <Breadcrumbs />
-<main id="main-content">
+<main
+  id="main-content"
+  class:list={[
+    "reading-container standard-page",
+    { "article-archive": props.archive },
+  ]}
+>
   {
     "titleTransition" in props ? (
       <h1>
@@ -31,18 +37,26 @@ const { props } = Astro;
       <h1>{props.pageTitle}</h1>
     )
   }
-  <p>{props.pageDesc}</p>
-  <slot />
+  {
+    props.pageDesc && (
+      <p class="page-description muted-text">{props.pageDesc}</p>
+    )
+  }
+  <div class="page-body"><slot /></div>
 </main>
 
 <style>
-  #main-content {
-    @apply mx-auto w-full max-w-3xl px-4 pb-4;
+  .standard-page {
+    padding-block: var(--space-6) var(--section-space);
   }
-  #main-content h1 {
-    @apply text-2xl font-semibold sm:text-3xl;
+  .standard-page h1 {
+    margin: 0;
+    font-size: var(--type-page-title);
   }
-  #main-content p {
-    @apply mb-6 mt-2 italic;
+  .page-description {
+    margin-top: var(--space-3);
+  }
+  .page-body {
+    margin-top: var(--space-8);
   }
 </style>

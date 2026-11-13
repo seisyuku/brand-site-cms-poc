@@ -3,74 +3,139 @@
 @tailwind utilities;
 
 @layer base {
-  :root,
-  html[data-theme="light"] {
-    --color-fill: 251, 254, 251;
-    --color-text-base: 40, 39, 40;
-    --color-accent: 0, 108, 172;
-    --color-card: 230, 230, 230;
-    --color-card-muted: 205, 205, 205;
-    --color-border: 236, 233, 233;
-  }
-  html[data-theme="dark"] {
-    --color-fill: 33, 39, 55;
-    --color-text-base: 234, 237, 243;
-    --color-accent: 255, 107, 1;
-    --color-card: 52, 63, 96;
-    --color-card-muted: 138, 51, 2;
-    --color-border: 171, 75, 8;
-  }
-  #sun-svg,
-  html[data-theme="dark"] #moon-svg {
-    display: none;
-  }
-  #moon-svg,
-  html[data-theme="dark"] #sun-svg {
-    display: block;
+  :root {
+    color-scheme: only light;
+    --color-fill: 250, 244, 235;
+    --color-text-base: 44, 38, 32;
+    --color-muted: 105, 92, 79;
+    --color-accent: 145, 65, 43;
+    --color-on-accent: 250, 244, 235;
+    --color-card: var(--color-fill);
+    --color-card-muted: var(--color-fill);
+    --color-border: 214, 201, 185;
+    /* Reading stays continuous; warm surfaces frame the site. */
+    --color-brand: 22, 33, 62;
+    --color-surface-brand: 246, 230, 213;
+    --color-surface-frame: 234, 216, 198;
+    --font-display: "Noto Serif TC", "Songti TC", "PMingLiU", Georgia, serif;
+    --font-body: "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", system-ui,
+      sans-serif;
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-6: 1.5rem;
+    --space-8: 2rem;
+    --type-page-title: clamp(2rem, 5vw, 3rem);
+    --type-section-title: clamp(1.5rem, 3vw, 2rem);
+    --type-subsection-title: 1.25rem;
+    --type-card-title: clamp(1.1875rem, 2.2vw, 1.5rem);
+    --section-space: clamp(2rem, 5vw, 4rem);
+    --page-gutter: clamp(1.25rem, 4.8vw, 3rem);
+    --site-width: 72rem;
+    --reading-width: 45rem;
+    --radius-control: 0.25rem;
+    --radius-media: 0.5rem;
   }
   body {
-    @apply flex min-h-[100svh] flex-col bg-skin-fill font-mono text-skin-base 
-    selection:bg-skin-accent selection:bg-opacity-70 selection:text-skin-inverted;
+    @apply flex min-h-[100svh] flex-col bg-skin-fill text-skin-base;
+    font-family: var(--font-body);
+    line-height: 1.7;
+    overflow-wrap: anywhere;
   }
-  section,
-  footer {
-    @apply mx-auto max-w-3xl px-4;
+  ::selection {
+    background: rgb(var(--color-accent));
+    color: rgb(var(--color-on-accent));
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-body);
+    font-weight: 700;
+    line-height: 1.45;
+    color: rgb(var(--color-brand));
+  }
+  h1 {
+    font-family: var(--font-display);
+    line-height: 1.35;
+    font-size: var(--type-page-title);
+  }
+  h2 {
+    font-size: var(--type-section-title);
+  }
+  h3 {
+    font-size: var(--type-subsection-title);
+  }
+  .standard-page .prose {
+    max-width: none;
+  }
+  .standard-page .prose > :first-child {
+    margin-top: 0;
+  }
+  .standard-page h2 {
+    font-size: var(--type-section-title);
+    line-height: 1.45;
+  }
+  .standard-page h3 {
+    font-size: var(--type-subsection-title);
+    line-height: 1.45;
   }
   a {
-    @apply outline-2 outline-offset-1 outline-skin-fill 
+    @apply outline-2 outline-offset-1 outline-skin-fill
     focus-visible:no-underline focus-visible:outline-dashed;
   }
   svg {
     @apply inline-block h-6 w-6 fill-skin-base group-hover:fill-skin-accent;
   }
   svg.icon-tabler {
-    @apply inline-block h-6 w-6 scale-125 fill-transparent 
-    stroke-current stroke-2 opacity-90 group-hover:fill-transparent 
+    @apply inline-block h-6 w-6 scale-125 fill-transparent
+    stroke-current stroke-2 opacity-90 group-hover:fill-transparent
     sm:scale-110;
   }
   .prose {
-    @apply prose-headings:!mb-3 prose-headings:!text-skin-base 
-    prose-h3:italic prose-p:!text-skin-base 
-    prose-a:!text-skin-base prose-a:!decoration-dashed prose-a:underline-offset-8
+    @apply prose-headings:!mb-3 prose-headings:!text-skin-base
+    prose-p:!text-skin-base
+    prose-a:!text-skin-accent prose-a:underline-offset-4
     hover:prose-a:text-skin-accent prose-blockquote:!border-l-skin-accent
-    prose-blockquote:border-opacity-50 prose-blockquote:opacity-80
-    prose-figcaption:!text-skin-base prose-figcaption:opacity-70
+    prose-blockquote:border-opacity-50
+    prose-figcaption:!text-skin-base
     prose-strong:!text-skin-base
 
-    
-    prose-code:rounded prose-code:bg-skin-card 
-    prose-code:bg-opacity-75 prose-code:p-1 
+
+    prose-code:rounded prose-code:bg-skin-card
+    prose-code:bg-opacity-75 prose-code:p-1
     prose-code:before:!content-none prose-code:after:!content-none
-    prose-ol:!text-skin-base 
+    prose-ol:!text-skin-base
     prose-ul:overflow-x-clip prose-ul:!text-skin-base prose-li:marker:!text-skin-accent
     prose-table:text-skin-base prose-th:border
-    prose-th:border-skin-line prose-td:border 
-    prose-td:border-skin-line prose-img:!my-2 
-    prose-img:mx-auto prose-img:border-2 
+    prose-th:border-skin-line prose-td:border
+    prose-td:border-skin-line prose-img:!my-2
+    prose-img:mx-auto prose-img:border-2
     prose-img:border-skin-line prose-hr:!border-skin-line;
   }
+  .prose {
+    font-size: clamp(1.0625rem, 1.6vw, 1.125rem);
+    line-height: 1.85;
+    max-width: var(--reading-width);
+  }
   .prose a {
-    @apply break-words hover:!text-skin-accent;
+    @apply break-words;
+  }
+  .prose img {
+    border-radius: var(--radius-media);
+  }
+  .prose pre {
+    overflow-x: auto;
+    background: rgb(var(--color-fill)) !important;
+    border: 1px solid rgb(var(--color-border));
+  }
+  .prose table {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
   }
   .prose thead th:first-child,
   tbody td:first-child,
@@ -93,6 +158,9 @@
   /* ===== scrollbar ===== */
   html {
     overflow-y: scroll;
+    scroll-padding-top: calc(
+      var(--site-header-height, 5.5rem) + var(--space-3)
+    );
   }
 
   /* width */
@@ -107,12 +175,12 @@
 
   /* Handle */
   ::-webkit-scrollbar-thumb {
-    @apply bg-skin-card;
+    background: rgb(var(--color-border));
   }
 
   /* Handle on hover */
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-skin-card-muted;
+    background: rgb(var(--color-muted));
   }
 
   code,
@@ -126,6 +194,82 @@
 }
 
 @layer components {
+  .site-container,
+  .reading-container {
+    width: min(100%, var(--site-width));
+    margin-inline: auto;
+    padding-inline: var(--page-gutter);
+  }
+  .reading-container {
+    width: min(100%, calc(var(--reading-width) + 2 * var(--page-gutter)));
+  }
+  .reading-surface {
+    background: rgb(var(--color-card));
+  }
+  .muted-text {
+    color: rgb(var(--color-muted));
+  }
+  .eyebrow {
+    color: rgb(var(--color-brand));
+    font-size: 0.875rem;
+    font-weight: 650;
+    letter-spacing: 0.035em;
+  }
+  .action-link {
+    display: inline-flex;
+    align-items: center;
+    padding-inline: var(--space-3);
+    border-radius: var(--radius-control);
+    background: rgb(var(--color-accent));
+    color: rgb(var(--color-on-accent));
+    font-weight: 650;
+  }
+  .action-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+  }
+  .inline-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--space-4);
+    margin-top: var(--space-2);
+  }
+  .inline-links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: rgb(var(--color-accent));
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+  }
+  .post-row {
+    border-top: 1px solid rgb(var(--color-border));
+    padding-block: var(--space-3) var(--space-4);
+  }
+  .post-row-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 var(--space-2);
+    margin-bottom: var(--space-1);
+    color: rgb(var(--color-muted));
+    font-size: 0.875rem;
+  }
+  .post-row-meta a {
+    color: rgb(var(--color-accent));
+    text-decoration: underline;
+  }
+  .post-row :is(h2, h3) {
+    font-size: var(--type-card-title);
+  }
+  .post-row :is(h2, h3) a:hover {
+    color: rgb(var(--color-accent));
+    text-decoration: underline;
+  }
+  .post-row p {
+    color: rgb(var(--color-muted));
+    margin-top: var(--space-1);
+  }
   .display-none {
     @apply hidden;
   }

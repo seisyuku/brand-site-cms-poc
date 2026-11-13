@@ -5,11 +5,17 @@ import TagPosts from "@layouts/TagPosts.astro";
 import getPostsByTag from "@utils/getPostsByTag";
 import getPagination from "@utils/getPagination";
 import getUniqueTags from "@utils/getUniqueTags";
+import { postCategories } from "@utils/postCategories";
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog", postFilter);
 
-  const tags = getUniqueTags(posts);
+  const tags = [
+    ...postCategories.map(({ tag, name }) => ({ tag, tagName: name })),
+    ...getUniqueTags(posts).filter(
+      ({ tag }) => !postCategories.some(category => category.tag === tag)
+    ),
+  ];
 
   return tags.map(({ tag, tagName }) => {
     return {

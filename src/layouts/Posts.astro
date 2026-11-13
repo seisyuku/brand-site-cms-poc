@@ -5,7 +5,8 @@ import Main from "@layouts/Main.astro";
 import Header from "@components/Header.astro";
 import Footer from "@components/Footer.astro";
 import Pagination from "@components/Pagination.astro";
-import Card from "@components/Card";
+import ArticleGrid from "@components/ArticleGrid.astro";
+import CategoryNav from "@components/CategoryNav.astro";
 import { SITE } from "@config";
 
 export interface Props {
@@ -17,16 +18,22 @@ export interface Props {
 const { currentPage, totalPages, paginatedPosts } = Astro.props;
 ---
 
-<Layout title={`Posts | ${SITE.title}`}>
+<Layout title={`文章與觀點 | ${SITE.title}`}>
   <Header activeNav="posts" />
-  <Main pageTitle="Posts" pageDesc="All the articles I've posted.">
-    <ul>
-      {
-        paginatedPosts.map(({ data, slug }) => (
-          <Card href={`/posts/${slug}/`} frontmatter={data} />
-        ))
-      }
-    </ul>
+  <Main
+    archive
+    pageTitle="文章與觀點"
+    pageDesc="我對 AI 產業、商業模式與企業經營的觀察。"
+  >
+    <CategoryNav active="all" />
+    {
+      paginatedPosts.length > 0 ? (
+        <ArticleGrid posts={paginatedPosts} />
+      ) : (
+        <p class="muted-text">文章準備中。</p>
+      )
+    }
+    <div class="inline-links"><a href="/tags/">查看所有分類與標籤 →</a></div>
   </Main>
 
   <Pagination

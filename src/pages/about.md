@@ -1,36 +1,14 @@
 ---
 layout: ../layouts/AboutLayout.astro
-title: "About"
+title: 關於我
 ---
 
-AstroPaper is a minimal, responsive and SEO-friendly Astro blog theme. I designed and crafted this based on [my personal blog](https://satnaing.dev/blog).
+我是米。做過管理、科技與媒體，現在主要在觀察未來：哪些只是新聞，哪些真的會改變我們怎麼工作與享受樂趣。
 
-This theme is aimed to be accessible out of the box. Light and dark mode are supported by
-default and additional color schemes can also be configured.
+我寫給台灣的中小企業經營者、管理者，以及有實務經驗的專業工作者。我關心商業模式、企業營運、產業格局，以及 AI 怎麼影響團隊每天做事的方式。
 
-This theme is self-documented \_ which means articles/posts in this theme can also be considered as documentations. So, see the documentation for more info.
+## 我怎麼看一件事
 
-<div>
-  <img src="/assets/dev.svg" class="sm:w-1/2 mx-auto" alt="coding dev illustration">
-</div>
+我先查事件的來源、時間與適用範圍，再說明我的判斷和仍待確認的地方。最後回到實際問題：這件事會影響誰？經營者接下來可以查什麼、試什麼？
 
-## Tech Stack
-
-This theme is written in vanilla JavaScript (+ TypeScript for type checking) and a little bit of ReactJS for some interactions. TailwindCSS is used for styling; and Markdown is used for blog contents.
-
-## Features
-
-Here are certain features of this site.
-
-- fully responsive and accessible
-- SEO-friendly
-- light & dark mode
-- fuzzy search
-- super fast performance
-- draft posts
-- pagination
-- sitemap & rss feed
-- highly customizable
-
-If you like this theme, you can star/contribute to the [repo](https://github.com/satnaing/astro-paper).  
-Or you can even give any feedback via my [email](mailto:contact@satnaing.dev).
+[看文章與觀點](/posts/) · [看工作方法與示例](/methods/) · [了解專業服務](/services/)

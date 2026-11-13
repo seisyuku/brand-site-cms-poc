@@ -1,4 +1,5 @@
 import { slugifyStr } from "@utils/slugify";
+import { getPostCategory } from "@utils/postCategories";
 import Datetime from "./Datetime";
 import type { CollectionEntry } from "astro:content";
 
@@ -9,26 +10,23 @@ export interface Props {
 }
 
 export default function Card({ href, frontmatter, secHeading = true }: Props) {
-  const { title, pubDatetime, modDatetime, description } = frontmatter;
-
-  const headerProps = {
-    style: { viewTransitionName: slugifyStr(title) },
-    className: "text-lg font-medium decoration-dashed hover:underline",
-  };
+  const { title, pubDatetime, modDatetime, description, tags } = frontmatter;
+  const category = getPostCategory(tags);
+  const Heading = secHeading ? "h2" : "h3";
 
   return (
-    <li className="my-6">
-      <a
-        href={href}
-        className="inline-block text-lg font-medium text-skin-accent decoration-dashed underline-offset-4 focus-visible:no-underline focus-visible:underline-offset-0"
-      >
-        {secHeading ? (
-          <h2 {...headerProps}>{title}</h2>
-        ) : (
-          <h3 {...headerProps}>{title}</h3>
+    <li className="post-row">
+      <div className="post-row-meta">
+        {category && (
+          <a href={`/tags/${encodeURIComponent(category.tag)}/`}>
+            {category.name}
+          </a>
         )}
-      </a>
-      <Datetime pubDatetime={pubDatetime} modDatetime={modDatetime} />
+        <Datetime pubDatetime={pubDatetime} modDatetime={modDatetime} />
+      </div>
+      <Heading style={{ viewTransitionName: slugifyStr(title) }}>
+        <a href={href}>{title}</a>
+      </Heading>
       <p>{description}</p>
     </li>
   );

@@ -1,215 +1,283 @@
 ---
-import { LOGO_IMAGE, SITE } from "@config";
-import Hr from "./Hr.astro";
-import LinkButton from "./LinkButton.astro";
+import { SITE } from "@config";
 
-export interface Props {
+interface Props {
   activeNav?: "posts" | "tags" | "about" | "search";
 }
 
 const { activeNav } = Astro.props;
+const { pathname } = Astro.url;
+const links = [
+  { href: "/", name: "首頁", current: pathname === "/" },
+  { href: "/about/", name: "關於我", current: activeNav === "about" },
+  { href: "/services/", name: "專業服務", current: pathname === "/services/" },
+  {
+    href: "/posts/",
+    name: "文章與觀點",
+    current: activeNav === "posts" || activeNav === "tags",
+  },
+  { href: "/methods/", name: "方法與案例", current: pathname === "/methods/" },
+  {
+    href: "/contact/",
+    name: "聯絡合作",
+    current: pathname === "/contact/",
+    primary: true,
+  },
+];
 ---
 
-<header>
-  <a id="skip-to-content" href="#main-content">Skip to content</a>
-  <div class="nav-container">
-    <div class="top-nav-wrap">
-      <a href="/" class="logo whitespace-nowrap">
+<header class="site-header">
+  <a class="skip-link" href="#main-content">跳至主要內容</a>
+  <div class="site-container header-inner">
+    <a href="/" class="wordmark">
+      <strong>{SITE.title}</strong>
+      <span>米的商業現場</span>
+    </a>
+    <nav id="site-navigation" aria-label="主導覽">
+      <ul>
         {
-          LOGO_IMAGE.enable ? (
-            <img
-              src={`/assets/${LOGO_IMAGE.svg ? "logo.svg" : "logo.png"}`}
-              alt={SITE.title}
-              width={LOGO_IMAGE.width}
-              height={LOGO_IMAGE.height}
-            />
-          ) : (
-            SITE.title
-          )
+          links.map(({ href, name, current, primary }) => (
+            <li>
+              <a
+                href={href}
+                aria-current={current ? "page" : undefined}
+                class:list={[{ "action-link": primary }]}
+              >
+                {name}
+              </a>
+            </li>
+          ))
         }
-      </a>
-      <nav id="nav-menu">
-        <button
-          class="hamburger-menu focus-outline"
-          aria-label="Open Menu"
-          aria-expanded="false"
-          aria-controls="menu-items"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="menu-icon"
-          >
-            <line x1="7" y1="12" x2="21" y2="12" class="line"></line>
-            <line x1="3" y1="6" x2="21" y2="6" class="line"></line>
-            <line x1="12" y1="18" x2="21" y2="18" class="line"></line>
-            <line x1="18" y1="6" x2="6" y2="18" class="close"></line>
-            <line x1="6" y1="6" x2="18" y2="18" class="close"></line>
-          </svg>
-        </button>
-        <ul id="menu-items" class="display-none sm:flex">
-          <li>
-            <a href="/posts/" class={activeNav === "posts" ? "active" : ""}>
-              Posts
-            </a>
-          </li>
-          <li>
-            <a href="/tags/" class={activeNav === "tags" ? "active" : ""}>
-              Tags
-            </a>
-          </li>
-          <li>
-            <a href="/about/" class={activeNav === "about" ? "active" : ""}>
-              About
-            </a>
-          </li>
-          <li>
-            <LinkButton
-              href="/search/"
-              className={`focus-outline p-3 sm:p-1 ${
-                activeNav === "search" ? "active" : ""
-              } flex`}
-              ariaLabel="search"
-              title="Search"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="scale-125 sm:scale-100"
-                ><path
-                  d="M19.023 16.977a35.13 35.13 0 0 1-1.367-1.384c-.372-.378-.596-.653-.596-.653l-2.8-1.337A6.962 6.962 0 0 0 16 9c0-3.859-3.14-7-7-7S2 5.141 2 9s3.14 7 7 7c1.763 0 3.37-.66 4.603-1.739l1.337 2.8s.275.224.653.596c.387.363.896.854 1.384 1.367l1.358 1.392.604.646 2.121-2.121-.646-.604c-.379-.372-.885-.866-1.391-1.36zM9 14c-2.757 0-5-2.243-5-5s2.243-5 5-5 5 2.243 5 5-2.243 5-5 5z"
-                ></path>
-              </svg>
-              <span class="sr-only">Search</span>
-            </LinkButton>
-          </li>
-          {
-            SITE.lightAndDarkMode && (
-              <li>
-                <button
-                  id="theme-btn"
-                  class="focus-outline"
-                  title="Toggles light & dark"
-                  aria-label="auto"
-                  aria-live="polite"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" id="moon-svg">
-                    <path d="M20.742 13.045a8.088 8.088 0 0 1-2.077.271c-2.135 0-4.14-.83-5.646-2.336a8.025 8.025 0 0 1-2.064-7.723A1 1 0 0 0 9.73 2.034a10.014 10.014 0 0 0-4.489 2.582c-3.898 3.898-3.898 10.243 0 14.143a9.937 9.937 0 0 0 7.072 2.93 9.93 9.93 0 0 0 7.07-2.929 10.007 10.007 0 0 0 2.583-4.491 1.001 1.001 0 0 0-1.224-1.224zm-2.772 4.301a7.947 7.947 0 0 1-5.656 2.343 7.953 7.953 0 0 1-5.658-2.344c-3.118-3.119-3.118-8.195 0-11.314a7.923 7.923 0 0 1 2.06-1.483 10.027 10.027 0 0 0 2.89 7.848 9.972 9.972 0 0 0 7.848 2.891 8.036 8.036 0 0 1-1.484 2.059z" />
-                  </svg>
-                  <svg xmlns="http://www.w3.org/2000/svg" id="sun-svg">
-                    <path d="M6.993 12c0 2.761 2.246 5.007 5.007 5.007s5.007-2.246 5.007-5.007S14.761 6.993 12 6.993 6.993 9.239 6.993 12zM12 8.993c1.658 0 3.007 1.349 3.007 3.007S13.658 15.007 12 15.007 8.993 13.658 8.993 12 10.342 8.993 12 8.993zM10.998 19h2v3h-2zm0-17h2v3h-2zm-9 9h3v2h-3zm17 0h3v2h-3zM4.219 18.363l2.12-2.122 1.415 1.414-2.12 2.122zM16.24 6.344l2.122-2.122 1.414 1.414-2.122 2.122zM6.342 7.759 4.22 5.637l1.415-1.414 2.12 2.122zm13.434 10.605-1.414 1.414-2.122-2.122 1.414-1.414z" />
-                  </svg>
-                </button>
-              </li>
-            )
-          }
-        </ul>
-      </nav>
+      </ul>
+    </nav>
+    <div class="header-tools">
+      <a
+        href="/search/"
+        aria-current={activeNav === "search" ? "page" : undefined}>搜尋</a
+      >
+      <button
+        class="menu-toggle"
+        type="button"
+        aria-label="選單"
+        aria-controls="site-navigation"
+        aria-expanded="false"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true" class="menu-icon">
+          <path d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+        <svg viewBox="0 0 24 24" aria-hidden="true" class="close-icon">
+          <path d="m6 6 12 12M18 6 6 18"></path>
+        </svg>
+      </button>
     </div>
   </div>
-  <Hr />
 </header>
 
 <style>
-  #skip-to-content {
-    @apply absolute -top-full left-16 z-50 bg-skin-accent px-3 py-2 text-skin-inverted transition-all focus:top-4;
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: rgb(var(--color-surface-brand));
+    border-bottom: 1px solid rgb(var(--color-border));
   }
-  .nav-container {
-    @apply mx-auto flex max-w-3xl flex-col items-center justify-between sm:flex-row;
+  .header-inner {
+    display: grid;
+    grid-template-columns: auto auto;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2) var(--space-4);
+    padding-block: var(--space-3);
   }
-  .top-nav-wrap {
-    @apply relative flex w-full items-start justify-between p-4 sm:items-center sm:py-8;
+  .wordmark {
+    display: grid;
+    width: fit-content;
+    color: rgb(var(--color-brand));
+    line-height: 1.25;
+    white-space: nowrap;
   }
-  .logo {
-    @apply absolute py-1 text-xl font-semibold sm:static sm:text-2xl;
+  .wordmark strong {
+    font: 700 1.375rem var(--font-display);
   }
-  .hamburger-menu {
-    @apply self-end p-2 sm:hidden;
+  .wordmark span {
+    margin-top: var(--space-1);
+    font-size: 0.8125rem;
   }
-  .hamburger-menu svg {
-    @apply h-6 w-6 scale-125 fill-skin-base;
-  }
-
   nav {
-    @apply flex w-full flex-col items-center sm:ml-2 sm:flex-row sm:justify-end sm:space-x-4 sm:py-0;
+    grid-column: 1 / -1;
+    grid-row: 2;
   }
-  nav ul {
-    @apply mt-4 grid w-44 grid-cols-2 grid-rows-4 gap-x-2 gap-y-2 sm:ml-0 sm:mt-0 sm:w-auto sm:gap-x-5 sm:gap-y-0;
+  nav ul,
+  .header-tools {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0 var(--space-3);
   }
-  nav ul li {
-    @apply col-span-2 flex items-center justify-center;
+  nav .action-link {
+    color: rgb(var(--color-on-accent));
   }
-  nav ul li a {
-    @apply w-full px-4 py-3 text-center font-medium hover:text-skin-accent sm:my-0 sm:px-2 sm:py-1;
+  .header-tools {
+    justify-self: end;
+    gap: 0 var(--space-1);
   }
-  nav ul li:nth-last-child(2) a {
-    @apply w-auto;
+  nav a,
+  .header-tools a,
+  .header-tools button {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: 0.875rem;
+    white-space: nowrap;
   }
-  nav ul li:nth-last-child(1),
-  nav ul li:nth-last-child(2) {
-    @apply col-span-1;
+  nav a:hover:not(.action-link),
+  [aria-current="page"] {
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
   }
-  nav a.active {
-    @apply underline decoration-wavy decoration-2 underline-offset-4;
+  .header-tools button {
+    justify-content: center;
+    min-width: 44px;
   }
-  nav a.active svg {
-    @apply fill-skin-accent;
+  .header-tools svg {
+    width: 1.125rem;
+    height: 1.125rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.5;
+  }
+  .header-tools .menu-toggle,
+  .menu-toggle .close-icon,
+  .menu-toggle[aria-expanded="true"] .menu-icon {
+    display: none;
+  }
+  .menu-toggle[aria-expanded="true"] .close-icon {
+    display: block;
+  }
+  .header-tools button:focus-visible {
+    outline: 2px solid rgb(var(--color-accent));
+    outline-offset: 2px;
+  }
+  .skip-link {
+    position: absolute;
+    left: var(--space-4);
+    top: var(--space-3);
+    z-index: 5;
+    padding: var(--space-2) var(--space-3);
+    background: rgb(var(--color-card));
+    transform: translateY(-150%);
+  }
+  .skip-link:focus {
+    transform: none;
   }
 
-  nav button {
-    @apply p-1;
-  }
-  nav button svg {
-    @apply h-6 w-6 fill-skin-base hover:fill-skin-accent;
-  }
-  #theme-btn {
-    @apply p-3 sm:p-1;
-  }
-  #theme-btn svg {
-    @apply scale-125 hover:rotate-12 sm:scale-100;
+  @media not all and (min-width: 960px) {
+    .header-inner {
+      gap: var(--space-1) var(--space-2);
+      padding-block: var(--space-2);
+    }
+    .wordmark strong {
+      font-size: 1.25rem;
+    }
+    .site-header[data-nav-ready] .menu-toggle {
+      display: inline-flex;
+    }
+    .site-header[data-nav-ready] nav {
+      display: none;
+      position: absolute;
+      top: 100%;
+      inset-inline: 0;
+      max-height: calc(100dvh - var(--site-header-height, 4rem));
+      overflow-y: auto;
+      padding: var(--space-2) var(--page-gutter) var(--space-3);
+      border-bottom: 1px solid rgb(var(--color-border));
+      background: rgb(var(--color-surface-brand));
+    }
+    .site-header[data-menu-open] nav {
+      display: block;
+    }
+    .site-header[data-nav-ready] nav ul {
+      display: grid;
+    }
+    .site-header[data-nav-ready] nav a:not(.action-link) {
+      width: 100%;
+    }
   }
 
-  .menu-icon line {
-    @apply transition-opacity duration-75 ease-in-out;
-  }
-  .menu-icon .close {
-    opacity: 0;
-  }
-  .menu-icon.is-active .line {
-    @apply opacity-0;
-  }
-  .menu-icon.is-active .close {
-    @apply opacity-100;
+  @media (min-width: 960px) {
+    .header-inner {
+      grid-template-columns: auto 1fr auto;
+    }
+    nav {
+      grid-column: auto;
+      grid-row: auto;
+    }
+    nav ul {
+      justify-content: end;
+      gap: 0 var(--space-4);
+    }
   }
 </style>
 
 <script>
-  function toggleNav() {
-    // Toggle menu
-    const menuBtn = document.querySelector(".hamburger-menu");
-    const menuIcon = document.querySelector(".menu-icon");
-    const menuItems = document.querySelector("#menu-items");
+  const headerSize = new ResizeObserver(([entry]) => {
+    updateHeaderHeight(entry.target);
+  });
 
-    menuBtn?.addEventListener("click", () => {
-      const menuExpanded = menuBtn.getAttribute("aria-expanded") === "true";
-      menuIcon?.classList.toggle("is-active");
-      menuBtn.setAttribute("aria-expanded", menuExpanded ? "false" : "true");
-      menuBtn.setAttribute(
-        "aria-label",
-        menuExpanded ? "Open Menu" : "Close Menu"
-      );
-      menuItems?.classList.toggle("display-none");
+  function updateHeaderHeight(header: Element) {
+    document.documentElement.style.setProperty(
+      "--site-header-height",
+      `${header.getBoundingClientRect().height}px`
+    );
+  }
+
+  function connectHeader() {
+    headerSize.disconnect();
+    const header = document.querySelector<HTMLElement>(".site-header");
+    const toggle = header?.querySelector<HTMLButtonElement>(".menu-toggle");
+    const nav = header?.querySelector("nav");
+    if (!header || !toggle || !nav) return;
+
+    function setMenu(open: boolean) {
+      header?.toggleAttribute("data-menu-open", open);
+      toggle?.setAttribute("aria-expanded", String(open));
+    }
+
+    header.setAttribute("data-nav-ready", "");
+    updateHeaderHeight(header);
+    headerSize.observe(header);
+
+    toggle.addEventListener("click", () => {
+      const open = toggle.getAttribute("aria-expanded") !== "true";
+      setMenu(open);
+      if (open) nav.querySelector("a")?.focus();
+    });
+    header.addEventListener("focusout", event => {
+      if (
+        !(event.relatedTarget instanceof Node) ||
+        !header.contains(event.relatedTarget)
+      ) {
+        setMenu(false);
+      }
+    });
+    nav.addEventListener("click", event => {
+      if (event.target instanceof Element && event.target.closest("a")) {
+        setMenu(false);
+      }
+    });
+    header.addEventListener("keydown", event => {
+      if (
+        event.key === "Escape" &&
+        toggle.getAttribute("aria-expanded") === "true"
+      ) {
+        setMenu(false);
+        toggle.focus();
+      }
     });
   }
 
-  toggleNav();
-
-  // Runs on view transitions navigation
-  document.addEventListener("astro:after-swap", toggleNav);
+  connectHeader();
+  document.addEventListener("astro:after-swap", connectHeader);
 </script>

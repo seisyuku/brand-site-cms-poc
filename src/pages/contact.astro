@@ -1,0 +1,48 @@
+---
+import Footer from "@components/Footer.astro";
+import Header from "@components/Header.astro";
+import Layout from "@layouts/Layout.astro";
+import Main from "@layouts/Main.astro";
+import { SITE, SOCIALS } from "@config";
+
+const title = "聯絡合作";
+const description =
+  "來訊時，告訴我你的產業、目前想解決的問題，以及希望何時做出決定。";
+const contactLinks = SOCIALS.filter(({ active, href }) => active && href);
+---
+
+<Layout title={`${title} | ${SITE.title}`} {description}>
+  <Header />
+  <Main pageTitle={title}>
+    <section class="contact-panel" aria-labelledby="contact-question">
+      <h2 id="contact-question">你現在遇到什麼問題？</h2>
+      <p>{description}</p>
+      {
+        contactLinks.length ? (
+          <div class="inline-links">
+            {contactLinks.map(({ name, href }) => (
+              <a href={href}>{name}</a>
+            ))}
+          </div>
+        ) : (
+          <p>Facebook 與 LinkedIn 公開連結待補。</p>
+        )
+      }
+    </section>
+  </Main>
+  <Footer />
+</Layout>
+
+<style>
+  .contact-panel {
+    border-top: 1px solid rgb(var(--color-border));
+    margin-top: var(--space-4);
+    padding-block: var(--space-6);
+  }
+  p {
+    margin-top: var(--space-2);
+  }
+  .contact-panel a {
+    color: rgb(var(--color-accent));
+  }
+</style>
